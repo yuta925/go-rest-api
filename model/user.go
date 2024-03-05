@@ -12,6 +12,6 @@ type User struct {
 
 // 新しいユーザーの情報をクライアントにレスポンスで返すときのデータの型定義
 type UserReponse struct {
-	ID unit `json:"id" gorm:"primary_key"`
+	ID uint `json:"id" gorm:"primary_key"`
 	Email string `json: "email" gorm:"unique"`
 }
