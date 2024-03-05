@@ -20,7 +20,7 @@ type userController struct {
 	uu usecase.IUserUsecase
 }
 
-func NerUserContorller(uu usecase.IUserUsecase) IUserController {
+func NerUserController(uu usecase.IUserUsecase) IUserController {
 	return &userController{uu}
 }
 
