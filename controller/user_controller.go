@@ -20,7 +20,7 @@ type userController struct {
 	uu usecase.IUserUsecase
 }
 
-func NerUserController(uu usecase.IUserUsecase) IUserController {
+func NewUserController(uu usecase.IUserUsecase) IUserController {
 	return &userController{uu}
 }
 
@@ -45,10 +45,14 @@ func (uc *userController) Login(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
+	jst, err := time.LoadLocation("Asia/Tokyo")
+	if err != nil {
+		panic(err)
+	}
 	cookie := new(http.Cookie)
 	cookie.Name = "token"
 	cookie.Value = tokenString
-	cookie.Expires = time.Now().Add(24 * time.Hour)
+	cookie.Expires = time.Now().In(jst).Add(12 * time.Hour) // Fix: Use the Add method to set the expiration time
 	cookie.Path = "/"
 	cookie.Domain = os.Getenv("API_DOMAIN")
 	// cookie.Secure = true
@@ -59,10 +63,14 @@ func (uc *userController) Login(c echo.Context) error {
 }
 
 func (uc *userController) Logout (c echo.Context) error {
+	jst, err := time.LoadLocation("Asia/Tokyo")
+	if err != nil {
+		panic(err)
+	}
 	cookie := new(http.Cookie)
 	cookie.Name = "token"
 	cookie.Value = ""
-	cookie.Expires = time.Now()
+	cookie.Expires = time.Now().In(jst).Add(12 * time.Hour)
 	cookie.Path = "/"
 	cookie.Domain = os.Getenv("API_DOMAIN")
 	// cookie.Secure = true

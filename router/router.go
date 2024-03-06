@@ -15,13 +15,13 @@ func NewRouter(uc controller.IUserController, tc controller.ITaskController) *ec
 	e.POST("/logout", uc.Logout)
 	t := e.Group("/tasks")
 	t.Use(echojwt.WithConfig(echojwt.Config{
-		SigningKey: []byte(os.Getenv("SECREt")),
+		SigningKey:  []byte(os.Getenv("SECRET")),
 		TokenLookup: "cookie:token",
 	}))
 	t.GET("", tc.GetAllTasks)
-	t.GET("/:task_id", tc.GetTaskById)
+	t.GET("/:taskId", tc.GetTaskById)
 	t.POST("", tc.CreateTask)
-	t.PUT("/:task_id", tc.UpdateTask)
-	t.DELETE("/:task_id", tc.DeleteTask)
+	t.PUT("/:taskId", tc.UpdateTask)
+	t.DELETE("/:taskId", tc.DeleteTask)
 	return e
 }

@@ -11,26 +11,26 @@ type ITaskUsecase interface {
 	CreateTask(task model.Task) (model.TaskResponse, error)
 	UpdateTask(task model.Task, userId uint, taskId uint) (model.TaskResponse, error)
 	DeleteTask(userId uint, taskId uint) error
-}
+}	
 
 type taskUsecase struct {
-	tr repository.ITasksRepository
+	tr repository.ITaskRepository
 }
 
-func NewTaskUsecase(tr repository.ITasksRepository) ITaskUsecase {
+func NewTaskUsecase(tr repository.ITaskRepository) ITaskUsecase {
 	return &taskUsecase{tr}
 }
 
 func (tu *taskUsecase) GetAllTasks(userId uint) ([]model.TaskResponse, error) {
 	tasks := []model.Task{}
-	if err := tu.tr.GetAllTAsks(&tasks, userId); err != nil {
+	if err := tu.tr.GetAllTasks(&tasks, userId); err != nil {
 		return nil, err
 	}
 	resTasks := []model.TaskResponse{}
 	for _, v := range tasks {
 		t := model.TaskResponse{
-			ID: v.ID,
-			Title: v.Title,
+			ID:        v.ID,
+			Title:     v.Title,
 			CreatedAt: v.CreatedAt,
 			UpdatedAt: v.UpdatedAt,
 		}
@@ -45,8 +45,8 @@ func (tu *taskUsecase) GetTaskById(userId uint, taskId uint) (model.TaskResponse
 		return model.TaskResponse{}, err
 	}
 	resTask := model.TaskResponse{
-		ID: task.ID,
-		Title: task.Title,
+		ID:        task.ID,
+		Title:     task.Title,
 		CreatedAt: task.CreatedAt,
 		UpdatedAt: task.UpdatedAt,
 	}
@@ -54,12 +54,12 @@ func (tu *taskUsecase) GetTaskById(userId uint, taskId uint) (model.TaskResponse
 }
 
 func (tu *taskUsecase) CreateTask(task model.Task) (model.TaskResponse, error) {
-	if err := tu.tr.CreatTask(&task); err != nil {
+	if err := tu.tr.CreateTask(&task); err != nil {
 		return model.TaskResponse{}, err
 	}
 	resTask := model.TaskResponse{
-		ID: task.ID,
-		Title: task.Title,
+		ID:        task.ID,
+		Title:     task.Title,
 		CreatedAt: task.CreatedAt,
 		UpdatedAt: task.UpdatedAt,
 	}
@@ -71,8 +71,8 @@ func (tu *taskUsecase) UpdateTask(task model.Task, userId uint, taskId uint) (mo
 		return model.TaskResponse{}, err
 	}
 	resTask := model.TaskResponse{
-		ID: task.ID,
-		Title: task.Title,
+		ID:        task.ID,
+		Title:     task.Title,
 		CreatedAt: task.CreatedAt,
 		UpdatedAt: task.UpdatedAt,
 	}
