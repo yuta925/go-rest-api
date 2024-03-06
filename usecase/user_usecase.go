@@ -4,6 +4,7 @@ import (
 	"go-rest-api/model"
 	"go-rest-api/repository"
 	"go-rest-api/validator"
+	"os"
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
@@ -78,15 +79,11 @@ func (uu *userUsecase) Login(user model.User) (string, error) {
 	// expはトークンの有効期限を設定するためのもの
 	// time.Now().Add(time.Hour * 12)は、現在時刻から12時間後を表す
 	// トークンの役割は、認証されたユーザーを識別すること
-	jst, err := time.LoadLocation("Asia/Tokyo")
-    if err != nil {
-        panic(err)
-    }
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"user_id": storedUser.ID,
-		"exp": time.Now().In(jst).Add(time.Hour * 12).Unix(),
+		"exp":     time.Now().Add(time.Hour * 12).Unix(),
 	})
-	tokenString, err := token.SignedString([]byte("SECRET"))
+	tokenString, err := token.SignedString([]byte(os.Getenv("SECRET")))
 	if err != nil {
 		return "", err
 	}

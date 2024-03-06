@@ -18,6 +18,9 @@ type ITaskController interface {
 	DeleteTask(c echo.Context) error
 }
 
+// usecaseのinterfaceに依存している
+// interfaceに依存することでusecaseを隠蔽できる
+// instance化
 type taskController struct {
 	tu usecase.ITaskUsecase
 }

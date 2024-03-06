@@ -1,5 +1,6 @@
 package repository
 
+// repositoryはデータの取り扱いに関する抽象化されたインターフェースを提供する
 import (
 	"fmt"
 	"go-rest-api/model"

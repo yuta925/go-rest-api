@@ -14,6 +14,7 @@ type ITaskUsecase interface {
 	DeleteTask(userId uint, taskId uint) error
 }
 
+// usecaseはrepositoryのinterfaceに依存している
 type taskUsecase struct {
 	tr repository.ITaskRepository
 	tv validator.ITaskValidator
