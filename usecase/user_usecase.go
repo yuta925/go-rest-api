@@ -3,6 +3,7 @@ package usecase
 import (
 	"go-rest-api/model"
 	"go-rest-api/repository"
+	"go-rest-api/validator"
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
@@ -17,11 +18,12 @@ type IUserUsecase interface {
 
 type userUsecase struct {
 	ur repository.IUserRepository
+	uv validator.IUserValidator
 }
 
 // NewUserUsecaseはIUserUsecaseを実装した構造体を返す
-func NewUserUsecase(ur repository.IUserRepository) IUserUsecase {
-	return &userUsecase{ur}
+func NewUserUsecase(ur repository.IUserRepository, uv validator.IUserValidator) IUserUsecase {
+	return &userUsecase{ur, uv}
 }
 
 /*
@@ -31,6 +33,9 @@ SignUp関数の概要
 3. レスポンスを返す 
 */
 func (uu *userUsecase) SignUp(user model.User) (model.UserResponse, error) {
+	if err := uu.uv.UserValidate(user); err != nil {
+		return model.UserResponse{}, err
+	}
 	/*
 	 * bycryptとは、パスワードのハッシュ化を行うためのライブラリ
 	 * GenerateFromPasswordの引数は、ハッシュ化したいパスワードとコストパラメータ
@@ -59,6 +64,9 @@ Login関数の概要
 3. JWTトークンを作成
 */
 func (uu *userUsecase) Login(user model.User) (string, error) {
+	if err := uu.uv.UserValidate(user); err != nil {
+		return "", err
+	}
 	storedUser := model.User{}
 	if err := uu.ur.GetUserByEmail(&storedUser, user.Email); err != nil {
 		return "", err
